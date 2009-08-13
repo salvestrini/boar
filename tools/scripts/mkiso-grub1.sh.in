@@ -85,17 +85,17 @@ fi
 
 @MKDIR_P@ iso/boot/grub && \
     cp -f \
-    	`@abs_top_builddir@/tools/scripts/grub1-config -D`/stage2_eltorito \
-    	iso/boot/grub && \
+	`@abs_top_builddir@/tools/scripts/grub1-config -D`/stage2_eltorito \
+	iso/boot/grub && \
     cp -f $kernel iso/boot && \
     for i in $modules ; do \
-    	cp -f $i iso/boot ; \
+	cp -f $i iso/boot ; \
     done && \
     touch                                       iso/boot/grub/menu.lst && \
-    echo "title Hybrid"                      >> iso/boot/grub/menu.lst && \
+    echo "title Boar"                        >> iso/boot/grub/menu.lst && \
     echo "kernel /boot/`basename ${kernel}`" >> iso/boot/grub/menu.lst && \
     for i in $modules ; do \
-    	echo "module /boot/`basename $i`"    >> iso/boot/grub/menu.lst ; \
+	echo "module /boot/`basename $i`"    >> iso/boot/grub/menu.lst ; \
     done && \
     @MKISOFS@ -R -b boot/grub/stage2_eltorito -no-emul-boot -boot-load-size 4 -boot-info-table -o $output iso || { \
     rm -r -f iso ; \

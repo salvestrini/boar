@@ -192,7 +192,7 @@ $CAT >$TMP_DIR/boot/grub/grub.cfg <<EOF
 set timeout=5
 set default 0
 
-menuentry "Hybrid" {
+menuentry "Boar" {
   multiboot /boot/kernel
 }
 EOF
