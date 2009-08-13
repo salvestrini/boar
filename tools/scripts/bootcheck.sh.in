@@ -1,0 +1,138 @@
+#
+# bootcheck
+#
+# Copyright (C) 2008, 2009 Francesco Salvestrini
+#                          Alessandro Massignan
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+# Required variables
+PROGNAME="bootcheck"
+PROGVERSION="0.0.1"
+
+# System tools
+SED="@SED@"
+GRUB1_MBCHK="@GRUB1_MBCHK@"
+
+# Script variables
+INFILE=""
+ARCH=""
+RETVAL=0
+
+#
+# Internal functions
+#
+help () {
+    echo "Usage: $PROGNAME [OPTION] -a <ARCH> -i <FILE>"
+    echo
+    echo "Check a kernel image for multiboot compliance"
+    echo
+    echo "  -a <ARG>    set the architecture"
+    echo "  -i <ARG>    set the input file"
+    echo "  -v          enable verbose messages"
+    echo "  -d          enable debugging"
+    echo "  -h          display this help and exit"
+    echo "  -V          display program version"
+    echo
+    echo "Report bugs to <@PACKAGE_BUGREPORT@>."
+}
+
+#
+# Libraries initialization
+#
+lib_init
+
+#
+# Parsing command line arguments
+#
+if test x"$*" = x"" ; then
+    hint "Missing required options"
+    exit 1
+fi
+
+while test ! x"$1" = x""
+do
+    case $1 in
+	-i)
+	    shift && INFILE=$1
+	    ;;
+	-a)
+	    shift && ARCH=$1
+	    ;;
+	-d)
+	    DEBUG=1
+	    ;;
+	-h)
+	    help && exit 0
+	    ;;
+	-V)
+	    version && exit 0
+	    ;;
+	*)
+	    hint "Wrong option \`$1'"
+	    exit 1
+	    ;;
+    esac
+    shift
+done
+
+#
+# Checking command line arguments
+#
+if test x"$GRUB1_MBCHK" = x"" ; then
+    hint "Cannot find needed mbchk program"
+    exit 1
+fi
+
+if test x"$INFILE" = x"" ; then
+    hint "Missing input file(s)"
+    exit 1
+fi
+
+if test ! -r $INFILE; then
+    error "File \`$INFILE' is not readable"
+    exit 1
+fi
+
+case $ARCH in
+    x86|X86)
+    debug "Architecture is set to \`x86'"
+    ;;
+    "")
+    hint "Missing architecture"
+    exit 1
+    ;;
+    *)
+    error "Unknown architecture \`$ARCH'"
+    exit 1
+    ;;
+esac
+
+#
+# Start the real job
+#
+$GRUB1_MBCHK $INFILE
+RETVAL=$?
+
+#
+# Libraries finalization
+#
+lib_fini
+
+#
+# All done!
+#
+exit $RETVAL

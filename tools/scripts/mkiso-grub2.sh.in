@@ -1,0 +1,213 @@
+#
+# mkiso-grub2
+#
+# Copyright (C) 2008, 2009 Francesco Salvestrini
+#                          Alessandro Massignan
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+me="mkiso-grub2"
+version="0.1"
+output=""
+
+case $1 in
+    -h|--help)
+    echo "Usage: $me [OPTIONS]"
+    echo ""
+    echo "Build an ISO image file using grub (2.x) as boot loader"
+    echo ""
+    echo "  -b, --boot FILE      file to boot"
+    echo "  -o, --output FILE    output ISO image file"
+    echo ""
+    echo "Report bugs to <@PACKAGE_BUGREPORT@>"
+    exit 0
+    ;;
+
+    -v|--version)
+    echo "$me (@PACKAGE_NAME@) $version"
+    echo "Written by Francesco Salvestrini"
+    echo "           Alessandro Massignan"
+    echo ""
+    echo "This is free software; see the source for copying conditions.  There is NO"
+    echo "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+    exit 0
+    ;;
+
+    -o|--output)
+    ;;
+esac
+
+if test -z "$boot" ; then
+    echo "$me: Missing boot file"
+    exit 1
+fi
+
+if test -z "$output" ; then
+    echo "$me: Missing output file"
+    exit 1
+fi
+
+missing ()
+{
+    PROGRAM=$1
+
+    if test x"$PROGRAM" = x""; then
+	return 1
+    fi
+    OLD_IFS=$IFS
+    IFS=":"
+
+    for i in $PATH
+    do
+
+	if test -f $i/$PROGRAM; then
+	    echo $i/$PROGRAM
+	    IFS=$OLD_IFS
+	    return 0
+	fi
+    done
+    IFS=$OLD_IFS
+
+    return 1
+}
+
+
+#
+# System tools
+#
+
+MKDIR=`missing mkdir`     || { error "Missing tool: mkdir";   exit 1; }
+RM=`missing rm`           || { error "Missing tool: rm";      exit 1; }
+CP=`missing cp`           || { error "Missing tool: cp";      exit 1; }
+CAT=`missing cat`         || { error "Missing tool: cat";     exit 1; }
+SED=`missing sed`         || { error "Missing tool: sed";     exit 1; }
+MKISOFS=`missing mkisofs` || { error "Missing tool: mkisofs"; exit 1; }
+
+
+#
+# Variables initialization and checks
+#
+
+TMP_DIR="tmp"
+test -d $TMP_DIR || {                                \
+    $MKDIR -p $TMP_DIR || {                          \
+	error "Failed to create $TMP_DIR directory"; \
+	exit 1;                                      \
+    };                                               \
+    $MKDIR -p $TMP_DIR/boot/grub;                    \
+}
+
+ISO_DIR="."
+test -d $ISO_DIR || {                                \
+    $MKDIR -p $ISO_DIR || {                          \
+	error "Failed to create $ISO_DIR directory"; \
+	exit 1;                                      \
+    };                                               \
+}
+
+GRUB1_CONFIG="@abs_top_builddir@/tools/scripts/grub1-config"
+test -r $GRUB1_CONFIG || {             \
+    error "Missing tool: grub1-config"; \
+    exit 1;                            \
+}
+
+GRUB1_EL_TORITO="`$GRUB1_CONFIG -D`/stage2_eltorito"
+test -r $GRUB1_EL_TORITO || {             \
+    error "Missing El-Torito image file"; \
+    exit 1;                               \
+}
+
+GRUB_LIB_DIR="@libdir@/grub/i386-pc"
+test -d $GRUB_LIB_DIR || {                                \
+    $MKDIR -p $GRUB_LIB_DIR || {                          \
+	error "Failed to create $GRUB_LIB_DIR directory"; \
+	exit 1;                                           \
+    };                                                    \
+}
+
+GRUB2_MKIMAGE=`missing grub-mkimage` || \
+    { error "Missing tool: grub-mkimage"; exit 1; }
+
+
+#
+# Let's start!
+#
+
+GRUB_IMAGE="$TMP_DIR/boot/grub2.img"
+ISO_IMAGE="$ISO_DIR/$output"
+
+#GRUB_MOD_LIST=`echo $GRUB_LIB_DIR/*.mod |                      \
+#	       $SED -e 's/[^\ ]\{1,\}\/\([^\/]\{1,\}\)/\1\ /g' \
+#		    -e 's/\.mod\ /\ /g'                        \
+#		    -e 's/\.mod$//'`
+GRUB_MOD_LIST=`echo $GRUB_LIB_DIR/iso9660.mod $GRUB_LIB_DIR/biosdisk.mod $GRUB_LIB_DIR/ls.mod $GRUB_LIB_DIR/multiboot.mod $GRUB_LIB_DIR/boot.mod $GRUB_LIB_DIR/elf.mod`
+test ! x"$GRUB_MOD_LIST" = x"" || \
+    { error "Failed to get GrUB2 modules list"; exit 1; }
+
+
+#
+# Building GrUB2 image
+#
+
+KERNEL="kernel"
+test -r $KERNEL || \
+    { error "Missing kernel image $KERNEL"; exit 1; }
+
+$GRUB2_MKIMAGE -v -d $GRUB_LIB_DIR $GRUB_MOD_LIST 2>/dev/null \
+       >$GRUB_IMAGE ||                                        \
+       {                                                      \
+	   error "Failed to create GrUB2 image";              \
+	   exit 1;                                            \
+       }
+
+$CP $KERNEL $TMP_DIR/${boot} ||                 \
+{                                               \
+    error "Failed to copy ${boot} image";       \
+    exit 1;                                     \
+}
+
+$CAT >$TMP_DIR/boot/grub/menu.lst <<EOF
+timeout 5
+default 0
+
+title GrUB2
+kernel /boot/grub2.img
+
+EOF
+
+$CAT >$TMP_DIR/boot/grub/grub.cfg <<EOF
+set timeout=5
+set default 0
+
+menuentry "Hybrid" {
+  multiboot /boot/kernel
+}
+EOF
+
+$CP $GRUB1_EL_TORITO $TMP_DIR/boot/grub ||
+{ error "Failed to copy El-Torito image"; exit 1; }
+
+$MKISOFS -R -b boot/grub/stage2_eltorito          \
+	 -no-emul-boot -boot-load-size 4          \
+	 -boot-info-table $TMP_DIR >$ISO_IMAGE || \
+{                                                 \
+    error "Failed to create ISO image";           \
+    exit 1;                                       \
+}
+
+$RM -rf $TMP_DIR
+
+exit 0

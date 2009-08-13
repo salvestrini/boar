@@ -1,0 +1,96 @@
+#
+# Copyright (C) 2008, 2009 Francesco Salvestrini
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+function lib_init()
+{
+	# PROGNAME is needed, the user must set it first ...
+	assert(PROGNAME != "");
+
+	# Setup some gawk defaults first ...
+	LINT = "fatal"; # lint warnings become fatal
+
+	# Some of the following variable or settings are gawk extensions ...
+	#RS         = "";
+	#FS         = "";
+	#IGNORECASE = 0;
+
+	if (!_trace_init()) {
+		# No tracing available yet
+		exit(1);
+	}
+
+	debug("lib_init() called\n");
+
+	if (!_debug_init()) {
+		error("Problems initializing `debug` library\n");
+		exit(1);
+	}
+	if (!_text_init()) {
+		error("Problems initializing `text` library\n");
+		exit(1);
+	}
+	if (!_test_init()) {
+		error("Problems initializing `test` library\n");
+		exit(1);
+	}
+	if (!_string_init()) {
+		error("Problems initializing `string` library\n");
+		exit(1);
+	}
+	if (!_ord_init()) {
+		error("Problems initializing `ord` library\n");
+		exit(1);
+	}
+	if (!_getopt_init()) {
+		error("Problems initializing `getopt` library\n");
+		exit(1);
+	}
+	if (!_file_init()) {
+		error("Problems initializing `file` library\n");
+		exit(1);
+	}
+	if (!_misc_init()) {
+		error("Problems initializing `misc` library\n");
+		exit(1);
+	}
+	if (!_sort_init()) {
+		error("Problems initializing `sort` library\n");
+		exit(1);
+	}
+	if (!_math_init()) {
+		error("Problems initializing `math` library\n");
+		exit(1);
+	}
+}
+
+function lib_fini()
+{
+	debug("lib_fini() called\n");
+
+	_math_fini();
+	_sort_fini();
+	_misc_fini();
+	_file_fini();
+	_getopt_fini();
+	_ord_fini();
+	_string_fini();
+	_test_fini();
+	_text_fini();
+	_debug_fini();
+	_trace_fini();
+}

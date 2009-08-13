@@ -1,0 +1,255 @@
+#
+# grub2-config
+#
+# Copyright (C) 2008, 2009 Francesco Salvestrini
+#                          Alessandro Massignan
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+# Required variables
+PROGNAME="grub2-config"
+PROGVERSION="0.0.1"
+
+# System tools
+GRUBINSTALL="@GRUB_INSTALL@"
+SED="@SED@"
+
+# Script variables
+ACTION=""
+RESOLVEDVAR=""
+
+help() {
+    echo "Usage: $PROGNAME [OPTION]"
+    echo
+    echo "  -B    output GrUB binary path"
+    echo "  -D    output GrUB data path"
+    echo "  -V    enable verbose messages"
+    echo "  -d    enable debugging"
+    echo "  -h    display this help and exit"
+    echo
+    echo "Report bugs to <@PACKAGE_BUGREPORT@>"
+}
+
+resolve() {
+    COUNT=0
+    VARNAME=$1
+
+    #
+    # Take the initial variable value
+    #
+    VARVALUE=`$SED -n '{
+	/^'$VARNAME'=/{
+	    s!^'$VARNAME'=!!
+	    s![ \t]*$!!
+		p
+		d
+		q
+	}
+	}' <$GRUBINSTALL`
+    MATCHPREV=""
+    MATCHCURR=""
+
+    #
+    # Now looping until the variable lacks of '$[{]...[}]'
+    #
+    while test ! x"`echo "$VARVALUE" | $SED -n '/\\$[{].*[}]/p'`" = x""
+      do
+      COUNT=$(( COUNT + 1 ))
+      debug " step $COUNT - '$VARVALUE'"
+      TMP=""
+      MATCHCURR=`echo "$VARVALUE" | $SED -e 's!.*\$[{]\(.*\)[}].*!\1!'`
+
+      if test x"$MATCHCURR" = x"$MATCHPREV" ; then
+	  error "Failed to resolve variable '$MATCHCURR'"
+	  exit 1
+      else
+	  MATCHPREV=$MATCHCURR
+      fi
+
+      MATCHVALUE=`$SED -n '{
+	/^'$MATCHCURR'=/{
+	    s!^'$MATCHCURR'=!!
+	    s![ \t]*$!!
+		p
+		d
+		q
+	}
+	}' <$GRUBINSTALL`
+      TMP=`echo "$VARVALUE" | $SED -e 's!\$[{]'$MATCHCURR'[}]!'$MATCHVALUE'!'`
+      VARVALUE=$TMP
+    done
+
+    debug " total steps - $COUNT"
+
+    #
+    # Cleaning duplicated and ending '/' chars
+    #
+    VARVALUE=`echo "$TMP" | $SED -e 's/\/\/*/\//' -e 's/\/*$//'`
+    RESOLVEDVAR=$VARVALUE
+
+    verbose "Variable resolved"
+}
+
+out_binpath() {
+    #
+    # The follow regular expression take care of GrUB Legacy releases,
+    # it is *NOT* compatible with GrUB2... Think about implementing it.
+    #
+    PATHREGEXP="grub_shell"
+
+    debug "Variable to resolve '$PATHREGEXP'"
+    resolve "$PATHREGEXP"
+    debug "Resolved variable is '$RESOLVEDVAR'"
+
+    if test x"$RESOLVEDVAR" = x"" ; then
+	error "Cannot get GRUB binary path"
+	exit 1
+    fi
+}
+
+out_datapath() {
+    #
+    # The follow regular expression take care of GrUB Legacy releases,
+    # it is *NOT* compatible with GrUB2... Think about implementing it.
+    #
+    PATHREGEXP="pkg[\(data\)\(lib\)]*dir"
+
+    debug "Variable to resolve '$PATHREGEXP'"
+    resolve "$PATHREGEXP"
+    debug "Variable is '$RESOLVEDVAR'"
+
+    if test x"$RESOLVEDVAR" = x"" ; then
+	error "Cannot get GRUB library path"
+	exit 1
+    fi
+}
+
+
+# Main
+
+# Libraries initialization
+lib_init
+
+#
+# Getting options:
+#
+if test x"$*" = x"" ; then
+   hint "Missing required options!"
+   exit 1
+fi
+
+while test ! x"$1" = x""
+  do
+  case $1 in
+      -B)
+      if test x"$ACTION" = x"" ; then
+	  ACTION="b"
+      else
+	  hint "Action already specified"
+	  exit 1
+      fi
+      ;;
+      -D)
+      if test x"$ACTION" = x"" ; then
+	  ACTION="d" ;
+      else
+	  hint "Action already specified"
+	  exit 1
+      fi
+      ;;
+      -v)
+      VERBOSE=1
+      ;;
+      -d)
+      DEBUG=1
+      ;;
+      -h)
+      help
+      exit 0
+      ;;
+      -V)
+      version
+      exit 0
+      ;;
+      *)
+      hint "Wrong option '$1'!"
+      exit 1
+      ;;
+    esac
+    shift
+done
+
+if test $DEBUG = 1 ; then
+    debug "Enabling debug output"
+fi
+if test $VERBOSE = 1 ; then
+    debug "Enabling verbose output"
+fi
+verbose "Command-line options parsed"
+
+debug "Script variables gained in command-line"
+debug " ACTION '$ACTION'"
+debug " DEBUG '$DEBUG'"
+debug " VERBOSE '$VERBOSE'"
+
+#
+# Preliminary checks
+#
+debug "grub-install located to '$GRUBINSTALL'"
+if test x"$GRUBINSTALL" = x"" ; then
+    error "grub-install variable is not defined"
+    exit 1
+fi
+if test ! -r $GRUBINSTALL ; then
+    error "Failed to find grub-install script"
+    exit 1
+fi
+verbose "grub-install check passed"
+
+#
+# Post parsing checks and declarations
+#
+
+if test x"$ACTION" = x"" ; then
+    hint "Missing required option"
+    exit 1
+fi
+verbose "Command-line options checks passed"
+
+# Avoid shell expansions
+set -f
+#
+# Perform the selected action
+#
+case $ACTION in
+    b)
+    out_binpath
+    ;;
+    d)
+    out_datapath
+    ;;
+    *)
+    ;;
+esac
+unset -f
+verbose "All done"
+
+# Libraries finalization
+lib_fini
+
+echo "$RESOLVEDVAR"
+
+exit 0

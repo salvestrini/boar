@@ -1,0 +1,132 @@
+#
+# Copyright (C) 2008, 2009 Francesco Salvestrini
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+function _test_init()
+{
+	return 1;
+}
+
+function _test_fini()
+{
+}
+
+function exist(file)
+{
+	_test = "@TEST_E@";
+	_pipe = _test " " file;
+	# debug("Running " _pipe "\n");
+	if (!system(_pipe)) {
+		# debug("File " file " exists\n");
+		return 1;
+	}
+
+	# debug("File " file " does not exists\n");
+	return 0;
+}
+
+function not_empty(file)
+{
+	_test = "@TEST_S@";
+	_pipe = _test " " file;
+	# debug("Running " _pipe "\n");
+	if (!system(_pipe)) {
+		return 1;
+	}
+
+	return 0;
+}
+
+function empty(file)
+{
+	if (not_empty(file)) {
+		return 0;
+	}
+
+	return 1;
+}
+
+function readable(file)
+{
+	assert(file != "");
+	if (file == "/dev/stdin") {
+		return 1;
+	}
+
+	if (!exist(file)) {
+		# File does not exists ... so it is not readable ...
+		return 0;
+	}
+
+	_test = "@TEST_R@";
+	if (_test != "") {
+		_pipe = _test " " file;
+		if (!system(_pipe)) {
+			# debug("File " file " is readable\n");
+			return 1;
+		}
+	} else {
+		assert(0);
+	}
+
+	# debug("File " file " is not readable\n");
+	return 0;
+}
+
+function writable(file)
+{
+	assert(file != "");
+	if (file == "/dev/stdout") {
+		return 1;
+	}
+
+	if (!exist(file)) {
+		# File does not exists ... probably is writable ...
+		return 1;
+	}
+
+	_test = "@TEST_W@";
+	if (_test != "") {
+		_pipe = _test " " file;
+		if (!system(_pipe)) {
+			return 1;
+		}
+	} else {
+		assert(0);
+	}
+
+	return 0;
+}
+
+function executable(file)
+{
+	if (!exist(file)) {
+		return 0;
+	}
+
+	_test = "@TEST_X@";
+	if (_test != "") {
+		_pipe = _test " " file;
+		if (!system(_pipe)) {
+			return 1;
+		}
+	} else {
+		assert(0);
+	}
+
+	return 0;
+}

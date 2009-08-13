@@ -1,0 +1,175 @@
+#
+# Copyright (C) 2008, 2009 Francesco Salvestrini
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+function _string_init()
+{
+	return 1;
+}
+
+function _string_fini()
+{
+}
+
+
+#
+# This function takes an input string "i_str" and returns the string (or a
+# string containig multiple lines) in order to match an "m_length" maximum
+# line length
+#
+function strformat(i_str, m_length)
+{
+	y        = 0;
+	f_str    = "";
+	t_str    = "";
+	s_length = length(i_str);
+
+	assert(i_str != "");
+	assert(m_length > 0);
+
+	if (s_length <= m_length) {
+		return i_str;
+	}
+
+	for (z = 1; z <= s_length; z++) {
+
+		x = substr(i_str, z, 1);
+
+		if (f_str != "") {
+			y = match(substr(f_str, y + 1), /\n/) + y;
+
+		}
+
+		if (t_str != "") {
+			t_str = t_str x;
+		} else {
+			t_str = x;
+		}
+
+		if (x ~ /[ \t\r\b\v\n]/) {
+
+			if (length(f_str) + length(t_str) - y < m_length) {
+
+				if (f_str != "") {
+					f_str = f_str t_str;
+				} else {
+					f_str = t_str;
+				}
+				t_str = "";
+			} else {
+				f_str = f_str "\n" t_str;
+				t_str = "";
+			}
+		}
+	}
+	return f_str;
+}
+
+#
+# The first line of input string "i_str" is indented with the string "f_ind"
+# and the remaining lines with the string "o_ind", so it is possible to
+# produce an output like the following:
+#
+# - First line with indentation " - ":
+#   * Second line with indentation "   * ";
+#
+# Be careful with the line length, but it could be adjusted using strformat ;-)
+#
+function strindent(i_str, f_ind, o_ind)
+{
+	assert(i_str != "");
+	sub(/\n*$/, "", i_str);
+
+	if (f_ind != "") {
+		i_str = f_ind i_str;
+	}
+
+	if (o_ind != "" && match(i_str, /\n/) != 0) {
+		gsub(/\n/, "\n" o_ind, i_str);
+	}
+	return i_str;
+}
+
+function strcleanspc(i_str)
+{
+	sub(/^[ \t]*/, "", i_str);
+	sub(/[ \t]*$/, "", i_str);
+
+	# XXX FIXME: Why not [ \t]+ ?
+	gsub(/[ \t][ \t]*/, " ", i_str);
+
+	return i_str;
+}
+
+function hex2int(string)
+{
+	retval = 0;
+
+	for (i = 1; i <= length(string); i++) {
+		c = substr(string, i, 1);
+		if (c >= 1 && c <= 9) {
+			retval = retval + c;
+		} else if (c == "a" || c == "A") {
+			retval += 10;
+		} else if (c == "b" || c == "B") {
+			retval += 11;
+		} else if (c == "c" || c == "C") {
+			retval += 12;
+		} else if (c == "d" || c == "D") {
+			retval += 13;
+		} else if (c == "e" || c == "E") {
+			retval += 14;
+		} else if (c == "f" || c == "F") {
+			retval += 15;
+		} else if (c != "0" && c!= "x" && c!="X") {
+			not_reachable();
+		}
+
+		if (i != length(string)) {
+			retval = retval * 16;
+		}
+	}
+
+	debug("hex `" string "` converted to dec `" retval "`\n");
+
+	return retval;
+}
+
+#function int2hex(string)
+#{
+#        retval = sprintf( "%lx", string);
+#
+#        return retval;
+#}
+
+#function int2bin(value)
+#{
+#
+#        retval = "";
+#        tmp    = value;
+#	while (tmp) {
+#		if (tmp % 2 == 0) {
+#			retval = "0" retval;
+#		} else {
+#			retval = "1" retval;
+#		}
+#
+#		tmp = int(tmp/2);
+#	}
+#
+#        retmpurn retval;
+#}

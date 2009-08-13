@@ -1,0 +1,156 @@
+#
+# Copyright (C) 2008, 2009 Francesco Salvestrini
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+function _misc_init()
+{
+	return 1;
+}
+
+function _misc_fini()
+{
+}
+
+function hint(str)
+{
+	if (str != "") {
+		message(PROGNAME ": " str "\n");
+	}
+
+	message("Try " PROGNAME " -h for more information.\n");
+}
+
+function help(h_useinput, h_desc, h_note, opts, opt_desc)
+{
+#
+# NOTE:
+#   "h_useinput" is to specify that the program requires FILES as input
+#   "h_desc"     is a description of the command behaviour
+#   "h_note"     is a notation of the command
+#   "opts"       is the list of short option arguments
+#   "opts_desc"  is the relative description of the option arguments stored in
+#                opts
+#
+# A sample output:
+#
+# Usage: program-name [OPTION]... [FILES]... <<< automatic
+# This program is use for...                 <<< "h_desc"
+#
+#   -x  this option is for...                <<< "opts"+"opts_desc"
+#   -y  this option is for...                <<< "opts"+"opts_desc"
+#
+# Read this note if you...                   <<< "h_note"
+#
+	h_length    = 80;
+	h_str       = "";
+	opt_hasargs = 0;
+
+	assert(h_useinput == 0 || h_useinput == 1);
+	assert(opts != "");
+
+	opt_hasargs = match(opts, /[^:]:/);
+
+	if (opt_hasargs == 0) {
+		spc = "          ";
+	} else {
+		spc = "              ";
+	}
+
+	h_str = "Usage: " PROGNAME " [OPTION]...";
+	if (h_useinput == 1) {
+		h_str = h_str " -- [FILES]...";
+	}
+	h_str = h_str "\n";
+
+	h_str = strformat(h_str, h_length);
+
+	if (h_desc != "") {
+		h_desc = strformat(h_desc, h_length);
+		h_desc = strindent(h_desc, "", " ");
+		h_str  = h_str h_desc ".\n";
+	}
+
+	h_str = h_str "\n";
+
+	c = length(opts);
+
+	for (b = 1; b <= c; b++) {
+		a = substr(opts, b, 1);
+		if (a != ":") {
+			c_desc = opt_desc[a];
+			if ((b + 1) <= c) {
+				if (substr(opts, b + 1, 1) == ":") {
+					h_str = h_str "  -" a " <ARG>    ";
+				} else {
+					h_str = h_str "  -" a "          ";
+				}
+				opt_str = strformat(opt_desc[a],
+						    h_length - length(spc));
+				opt_str = strindent(c_desc, "", spc);
+				h_str   = h_str opt_str "\n";
+			} else {
+				h_str   = h_str "  -" a "          ";
+				opt_str = strformat(opt_desc[a],
+						    h_length - length(spc));
+				opt_str = strindent(c_desc, "", spc);
+				h_str   = h_str opt_str "\n";
+			}
+		}
+	}
+
+	if (h_note != "") {
+		h_note = strformat(h_note, h_length);
+		h_str = h_str "\n" h_note "\n";
+	}
+
+	assert("@PACKAGE_BUGREPORT@" != "");
+	h_str = h_str "\n";
+	h_str = h_str "Report bugs to <@PACKAGE_BUGREPORT@>\n";
+
+	message(h_str);
+}
+
+#function strerror()
+#{
+#	assert(ERRNO != "");
+#
+#	return ERRNO;
+#}
+
+#function basename(name)
+#{
+#	assert(name != "");
+#
+#	new_name = name;
+#	sub(/\..*\//, "", new_name);
+#
+#	assert(new_name != "");
+#
+#	return new_name;
+#}
+
+#function chr(c)
+#{
+#	return sprintf("%c", c + 0);
+#}
+
+function remove_parameters(string)
+{
+	sub(/ .*$/,"", string);
+
+	return string;
+}

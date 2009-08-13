@@ -1,0 +1,141 @@
+#
+# Copyright (C) 2008, 2009 Francesco Salvestrini
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+my $trace_prefix = "";
+my $verbose_mode = 0;
+my $debug_mode   = 0;
+my $warning_mode = "none";
+
+sub trace_prefix_set ($)
+{
+    my $string = shift;
+
+    defined($string) or die "Missing trace prefix";
+
+    $trace_prefix = $string;
+}
+
+sub error ($)
+{
+    my $string = shift;
+
+    defined($string) or die "Missing error string";
+
+    print STDERR $trace_prefix . ": " . $string . "\n";
+}
+
+sub warning_set ($)
+{
+    my $string = shift;
+
+    $warning_mode = $string;
+}
+
+sub warning_get ()
+{
+    return $warning_mode;
+}
+
+sub warning ($)
+{
+    my $string = shift;
+
+    ($warning_mode ne "") or die "Missing warning mode";
+    defined($string)      or die "Missing warning string";
+
+    if ($warning_mode eq "none") {
+	return;
+    }
+
+    print STDERR $trace_prefix . ": " . $string . "\n";
+
+    if ($warning_mode eq "fatal") {
+	exit 1;
+    }
+}
+
+sub verbose_set ($)
+{
+    my $value = shift;
+
+    ($value >= 0) or die "Invalid verbose mode";
+
+    $verbose_mode = $value;
+}
+
+sub verbose_inc ()
+{
+    $verbose_mode = $verbose_mode + 1;
+}
+
+sub verbose_get ()
+{
+    return $verbose_mode;
+}
+
+sub verbose ($)
+{
+    my $string = shift;
+
+    defined($string)     or die "Missing verbose string";
+    ($verbose_mode >= 0) or die "Invalid verbose mode";
+
+    if ($verbose_mode != 0) {
+	print STDOUT $trace_prefix . ": " . $string . "\n";
+    }
+}
+
+sub debug_set ($)
+{
+    my $value = shift;
+
+    ($value >= 0) or die "Invalid debug mode";
+
+    $debug_mode = $value;
+}
+
+sub debug_inc ()
+{
+    $debug_mode = $debug_mode + 1;
+}
+
+sub debug_get ()
+{
+    return $debug_mode;
+}
+
+sub debug ($)
+{
+    my $string = shift;
+
+    defined($string)   or die "Missing debug string";
+    ($debug_mode >= 0) or die "Invalid debug mode";
+
+    if ($debug_mode != 0) {
+	print STDERR $trace_prefix . ": " . $string . "\n";
+    }
+}
+
+sub message ($)
+{
+    my $string = shift;
+
+    defined($string)   or die "Missing message string";
+
+    print STDOUT $string;
+}

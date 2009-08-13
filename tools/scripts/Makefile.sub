@@ -1,0 +1,75 @@
+##
+## Input file for automake
+##
+## Copyright (C) 2008, 2009 Francesco Salvestrini
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2 of the License, or
+## (at your option) any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License along
+## with this program; if not, write to the Free Software Foundation, Inc.,
+## 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+##
+
+#
+# Transformation related variables
+#
+
+awk_lib_SRC = $(top_builddir)/tools/libs/awk/lib.awk
+sh_lib_SRC  = $(top_builddir)/tools/libs/sh/lib.sh
+pl_lib_SRC  = $(top_builddir)/tools/libs/perl/lib.pl
+
+header_sh  = { echo "\#! @SHELL@" ; echo "" ; }
+footer_sh  = { echo "" ; }
+protect_sh = { cat ; }
+
+transform_sh_in_2_sh =				\
+	{ { $(header_sh) &&			\
+	    cat $(sh_lib_SRC) &&		\
+	    cat $(srcdir)/$$INFILE &&		\
+	    $(footer_sh) } |			\
+	    $(protect_sh) > $$OUTFILE ; } 
+
+transform_sh_2_script =					\
+	{ cat $$INFILE | $(do_subst) > $$OUTFILE &&	\
+	  chmod +x $$OUTFILE ; }
+
+header_awk  = { echo "@AWK@ '" ; }
+footer_awk  = { echo "' ""$$""@" ; }
+protect_awk = { $(SED) -e "s/'/\'/g" -e 's/,[ \t]*$$/, \\/' ; }
+
+transform_awk_in_2_awk =			\
+	{ { $(header_awk) &&			\
+	    cat $(awk_lib_SRC) &&		\
+	    cat $(srcdir)/$$INFILE &&		\
+	    $(footer_awk) } |			\
+	    $(protect_awk) > $$OUTFILE ; }
+
+transform_awk_2_sh =				\
+	{ { $(header_sh) &&			\
+	    cat $(sh_lib_SRC) &&		\
+	    cat $$INFILE &&			\
+	    $(footer_sh) } |			\
+	    $(protect_sh) > $$OUTFILE ; }
+
+header_perl  = { echo "\#! @PERL@" ; echo "" ; }
+footer_perl  = { echo "" ; }
+protect_perl = { cat ; }
+
+transform_pl_in_2_pl =				\
+	{ { $(header_perl) &&			\
+	    cat $(pl_lib_SRC) &&		\
+	    cat $(srcdir)/$$INFILE &&		\
+	    $(footer_perl) } |			\
+	    $(protect_perl) > $$OUTFILE ; }
+
+transform_pl_2_script =					\
+	{ cat $$INFILE | $(do_subst) > $$OUTFILE &&	\
+	  chmod +x $$OUTFILE ; }
