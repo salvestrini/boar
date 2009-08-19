@@ -59,13 +59,13 @@ sub warning ($)
     defined($string)      or die "Missing warning string";
 
     if ($warning_mode eq "none") {
-	return;
+        return;
     }
 
     print STDERR $trace_prefix . ": " . $string . "\n";
 
     if ($warning_mode eq "fatal") {
-	exit 1;
+        exit 1;
     }
 }
 
@@ -96,7 +96,7 @@ sub verbose ($)
     ($verbose_mode >= 0) or die "Invalid verbose mode";
 
     if ($verbose_mode != 0) {
-	print STDOUT $trace_prefix . ": " . $string . "\n";
+        print STDOUT $trace_prefix . ": " . $string . "\n";
     }
 }
 
@@ -127,7 +127,7 @@ sub debug ($)
     ($debug_mode >= 0) or die "Invalid debug mode";
 
     if ($debug_mode != 0) {
-	print STDERR $trace_prefix . ": " . $string . "\n";
+        print STDERR $trace_prefix . ": " . $string . "\n";
     }
 }
 
