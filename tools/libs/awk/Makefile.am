@@ -52,6 +52,7 @@ EXTRA_DIST =					\
 ##
 ## Maintainer related targets
 ##
+update-local: Makefile
 
 ##
 ## XXX FIXME:
@@ -110,10 +111,3 @@ maintainer-check-init-fini-functions: Makefile $(awk_libs_SRCS)
 	done
 
 maintainer-check-local: maintainer-check-whitespaces maintainer-check-init-fini-functions maintainer-check-unallowed-function
-
-##
-## Maintainer related targets
-##
-update-local: Makefile
-
-maintainer-check-local: Makefile
