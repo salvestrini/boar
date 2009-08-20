@@ -18,7 +18,7 @@
 
 function _debug_init()
 {
-	return 1;
+        return 1;
 }
 
 function _debug_fini()
@@ -27,23 +27,23 @@ function _debug_fini()
 
 function assert(condition)
 {
-	if (!(condition)) {
-		bug("Assertion failed");
-	}
+        if (!(condition)) {
+                bug("Assertion failed");
+        }
 }
 
 function bug(str)
 {
-	error("Bug hit !!!\n");
-	if (str != "") {
-		error(str "\n");
-	}
-	error("Please report bugs to <@PACKAGE_BUGREPORT@>\n");
+        error("Bug hit !!!\n");
+        if (str != "") {
+                error(str "\n");
+        }
+        error("Please report bugs to <@PACKAGE_BUGREPORT@>\n");
 
-	exit(1);
+        exit(1);
 }
 
 function not_reachable()
 {
-	bug("Running an unreachable line of code");
+        bug("Running an unreachable line of code");
 }

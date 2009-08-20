@@ -18,7 +18,7 @@
 
 function _misc_init()
 {
-	return 1;
+        return 1;
 }
 
 function _misc_fini()
@@ -27,11 +27,11 @@ function _misc_fini()
 
 function hint(str)
 {
-	if (str != "") {
-		message(PROGNAME ": " str "\n");
-	}
+        if (str != "") {
+                message(PROGNAME ": " str "\n");
+        }
 
-	message("Try " PROGNAME " -h for more information.\n");
+        message("Try " PROGNAME " -h for more information.\n");
 }
 
 function help(h_useinput, h_desc, h_note, opts, opt_desc)
@@ -55,102 +55,102 @@ function help(h_useinput, h_desc, h_note, opts, opt_desc)
 #
 # Read this note if you...                   <<< "h_note"
 #
-	h_length    = 80;
-	h_str       = "";
-	opt_hasargs = 0;
+        h_length    = 80;
+        h_str       = "";
+        opt_hasargs = 0;
 
-	assert(h_useinput == 0 || h_useinput == 1);
-	assert(opts != "");
+        assert(h_useinput == 0 || h_useinput == 1);
+        assert(opts != "");
 
-	opt_hasargs = match(opts, /[^:]:/);
+        opt_hasargs = match(opts, /[^:]:/);
 
-	if (opt_hasargs == 0) {
-		spc = "          ";
-	} else {
-		spc = "              ";
-	}
+        if (opt_hasargs == 0) {
+                spc = "          ";
+        } else {
+                spc = "              ";
+        }
 
-	h_str = "Usage: " PROGNAME " [OPTION]...";
-	if (h_useinput == 1) {
-		h_str = h_str " -- [FILES]...";
-	}
-	h_str = h_str "\n";
+        h_str = "Usage: " PROGNAME " [OPTION]...";
+        if (h_useinput == 1) {
+                h_str = h_str " -- [FILES]...";
+        }
+        h_str = h_str "\n";
 
-	h_str = strformat(h_str, h_length);
+        h_str = strformat(h_str, h_length);
 
-	if (h_desc != "") {
-		h_desc = strformat(h_desc, h_length);
-		h_desc = strindent(h_desc, "", " ");
-		h_str  = h_str h_desc ".\n";
-	}
+        if (h_desc != "") {
+                h_desc = strformat(h_desc, h_length);
+                h_desc = strindent(h_desc, "", " ");
+                h_str  = h_str h_desc ".\n";
+        }
 
-	h_str = h_str "\n";
+        h_str = h_str "\n";
 
-	c = length(opts);
+        c = length(opts);
 
-	for (b = 1; b <= c; b++) {
-		a = substr(opts, b, 1);
-		if (a != ":") {
-			c_desc = opt_desc[a];
-			if ((b + 1) <= c) {
-				if (substr(opts, b + 1, 1) == ":") {
-					h_str = h_str "  -" a " <ARG>    ";
-				} else {
-					h_str = h_str "  -" a "          ";
-				}
-				opt_str = strformat(opt_desc[a],
-						    h_length - length(spc));
-				opt_str = strindent(c_desc, "", spc);
-				h_str   = h_str opt_str "\n";
-			} else {
-				h_str   = h_str "  -" a "          ";
-				opt_str = strformat(opt_desc[a],
-						    h_length - length(spc));
-				opt_str = strindent(c_desc, "", spc);
-				h_str   = h_str opt_str "\n";
-			}
-		}
-	}
+        for (b = 1; b <= c; b++) {
+                a = substr(opts, b, 1);
+                if (a != ":") {
+                        c_desc = opt_desc[a];
+                        if ((b + 1) <= c) {
+                                if (substr(opts, b + 1, 1) == ":") {
+                                        h_str = h_str "  -" a " <ARG>    ";
+                                } else {
+                                        h_str = h_str "  -" a "          ";
+                                }
+                                opt_str = strformat(opt_desc[a],
+                                                    h_length - length(spc));
+                                opt_str = strindent(c_desc, "", spc);
+                                h_str   = h_str opt_str "\n";
+                        } else {
+                                h_str   = h_str "  -" a "          ";
+                                opt_str = strformat(opt_desc[a],
+                                                    h_length - length(spc));
+                                opt_str = strindent(c_desc, "", spc);
+                                h_str   = h_str opt_str "\n";
+                        }
+                }
+        }
 
-	if (h_note != "") {
-		h_note = strformat(h_note, h_length);
-		h_str = h_str "\n" h_note "\n";
-	}
+        if (h_note != "") {
+                h_note = strformat(h_note, h_length);
+                h_str = h_str "\n" h_note "\n";
+        }
 
-	assert("@PACKAGE_BUGREPORT@" != "");
-	h_str = h_str "\n";
-	h_str = h_str "Report bugs to <@PACKAGE_BUGREPORT@>\n";
+        assert("@PACKAGE_BUGREPORT@" != "");
+        h_str = h_str "\n";
+        h_str = h_str "Report bugs to <@PACKAGE_BUGREPORT@>\n";
 
-	message(h_str);
+        message(h_str);
 }
 
 #function strerror()
 #{
-#	assert(ERRNO != "");
+#       assert(ERRNO != "");
 #
-#	return ERRNO;
+#       return ERRNO;
 #}
 
 #function basename(name)
 #{
-#	assert(name != "");
+#       assert(name != "");
 #
-#	new_name = name;
-#	sub(/\..*\//, "", new_name);
+#       new_name = name;
+#       sub(/\..*\//, "", new_name);
 #
-#	assert(new_name != "");
+#       assert(new_name != "");
 #
-#	return new_name;
+#       return new_name;
 #}
 
 #function chr(c)
 #{
-#	return sprintf("%c", c + 0);
+#       return sprintf("%c", c + 0);
 #}
 
 function remove_parameters(string)
 {
-	sub(/ .*$/,"", string);
+        sub(/ .*$/,"", string);
 
-	return string;
+        return string;
 }

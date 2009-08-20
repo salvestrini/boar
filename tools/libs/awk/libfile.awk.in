@@ -18,45 +18,45 @@
 
 function _file_init()
 {
-	delete _files_open;
-	delete _files_error;
-	delete _files_eof;
+        delete _files_open;
+        delete _files_error;
+        delete _files_eof;
 
-	return 1;
+        return 1;
 }
 
 function _file_fini()
 {
-	delete _files_open;
-	delete _files_error;
-	delete _files_eof;
+        delete _files_open;
+        delete _files_error;
+        delete _files_eof;
 }
 
 function path_clean(string)
 {
-	assert(string != "");
+        assert(string != "");
 
-	#debug("Cleaning string " string " from // sequences\n");
-	while (match(string, "//+") != 0) {
-		sub("//+", "/", string);
-		#debug("Fixed, path is now " string "\n");
-	}
+        #debug("Cleaning string " string " from // sequences\n");
+        while (match(string, "//+") != 0) {
+                sub("//+", "/", string);
+                #debug("Fixed, path is now " string "\n");
+        }
 
-	return string;
+        return string;
 }
 
 function file_find(paths, infile)
 {
-	tmpfile = "";
+        tmpfile = "";
 
-	for (p in paths) {
-		tmpfile = p "/" infile;
-		if (readable(tmpfile)) {
-			break;
-		}
-	}
+        for (p in paths) {
+                tmpfile = p "/" infile;
+                if (readable(tmpfile)) {
+                        break;
+                }
+        }
 
-	return tmpfile;
+        return tmpfile;
 }
 
 #function file_open(_file, _mode)

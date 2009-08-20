@@ -18,7 +18,7 @@
 
 function _sort_init()
 {
-	return 1;
+        return 1;
 }
 
 function _sort_fini()
@@ -30,40 +30,40 @@ function _sort_fini()
 #
 #function qsort(qs_array, qs_l, qs_r)
 #{
-#	qs_lh = qs_l;
-#	qs_rh = qs_r;
-#	qs_s  = qs_array[qs_l];
+#       qs_lh = qs_l;
+#       qs_rh = qs_r;
+#       qs_s  = qs_array[qs_l];
 #
-#	while (qs_l < qs_r) {
+#       while (qs_l < qs_r) {
 #
-#		while ((qs_array[qs_r] >= qs_s) && (qs_l < qs_r)) {
-#			qs_r--;
-#		}
+#               while ((qs_array[qs_r] >= qs_s) && (qs_l < qs_r)) {
+#                       qs_r--;
+#               }
 #
-#		if (qs_l != qs_r) {
-#			qs_array[qs_l] = qs_array[qs_r];
-#			qs_l++;
-#		}
+#               if (qs_l != qs_r) {
+#                       qs_array[qs_l] = qs_array[qs_r];
+#                       qs_l++;
+#               }
 #
-#		while ((qs_array[qs_r] <= qs_s) && (qs_l < qs_r)) {
-#			qs_l++;
-#		}
+#               while ((qs_array[qs_r] <= qs_s) && (qs_l < qs_r)) {
+#                       qs_l++;
+#               }
 #
-#		if (qs_l != qs_r) {
-#			qs_array[qs_r] = qs_array[qs_l];
-#			qs_r--;
-#		}
-#	}
-#	qs_array[qs_r] = qs_s;
-#	qs_s           = qs_r;
-#	qs_l           = qs_lh;
-#	qs_r           = qs_rh;
+#               if (qs_l != qs_r) {
+#                       qs_array[qs_r] = qs_array[qs_l];
+#                       qs_r--;
+#               }
+#       }
+#       qs_array[qs_r] = qs_s;
+#       qs_s           = qs_r;
+#       qs_l           = qs_lh;
+#       qs_r           = qs_rh;
 #
-#	if (qs_r < qs_s) {
-#		qsort(qs_array, qs_s - 1, qs_r);
-#	}
+#       if (qs_r < qs_s) {
+#               qsort(qs_array, qs_s - 1, qs_r);
+#       }
 #
-#	if (qs_l > qs_s) {
-#		qsort(qs_array, qs_l, qs_s + 1);
-#	}
+#       if (qs_l > qs_s) {
+#               qsort(qs_array, qs_l, qs_s + 1);
+#       }
 #}

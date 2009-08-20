@@ -18,65 +18,65 @@
 
 function _trace_init()
 {
-	_debug        = 0;
-	_verbose      = 0;
-	_warning      = 1;
+        _debug        = 0;
+        _verbose      = 0;
+        _warning      = 1;
 
-	_stderr_used  = 0;
-	_stdout_used  = 0;
+        _stderr_used  = 0;
+        _stdout_used  = 0;
 
-	return 1;
+        return 1;
 }
 
 function _trace_fini()
 {
-	if (_stdout_used) {
-		# Be sure to have stdout open before closing it ... someone
-		# could have closed it meanwhile ...
-		printf("") > "/dev/stdout";
-		close("/dev/stdout");
-	}
+        if (_stdout_used) {
+                # Be sure to have stdout open before closing it ... someone
+                # could have closed it meanwhile ...
+                printf("") > "/dev/stdout";
+                close("/dev/stdout");
+        }
 
-	if (_stderr_used) {
-		# Be sure to have stderr open before closing it ... someone
-		# could have closed it meanwhile ...
-		printf("") > "/dev/stderr";
-		close("/dev/stderr");
-	}
+        if (_stderr_used) {
+                # Be sure to have stderr open before closing it ... someone
+                # could have closed it meanwhile ...
+                printf("") > "/dev/stderr";
+                close("/dev/stderr");
+        }
 }
 
 function message(str)
 {
-	printf("%s", str) > "/dev/stdout";
-	_stdout_used++;
+        printf("%s", str) > "/dev/stdout";
+        _stdout_used++;
 }
 
 function error(str)
 {
-	printf("%s: %s", PROGNAME, str) > "/dev/stderr";
-	_stderr_used++;
+        printf("%s: %s", PROGNAME, str) > "/dev/stderr";
+        _stderr_used++;
 }
 
 function warning(str)
 {
-	if (_warning) {
-		printf("%s: %s", PROGNAME, str) > "/dev/stderr";
-		_stderr_used++;
-	}
+        if (_warning) {
+                printf("%s: %s", PROGNAME, str) > "/dev/stderr";
+                _stderr_used++;
+        }
 }
 
 function debug(str)
 {
-	if (_debug) {
-		printf("%s: %s", PROGNAME, str) > "/dev/stdout";
-		_stdout_used++;
-	}
+        if (_debug) {
+                printf("%s: %s", PROGNAME, str) > "/dev/stdout";
+                _stdout_used++;
+        }
 }
 
 function verbose(str)
 {
-	if (_verbose) {
-		printf("%s: %s", PROGNAME, str) > "/dev/stdout";
-		_stdout_used++;
-	}
+        if (_verbose) {
+                printf("%s: %s", PROGNAME, str) > "/dev/stdout";
+                _stdout_used++;
+        }
 }

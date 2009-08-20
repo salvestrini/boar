@@ -23,33 +23,33 @@
 
 function _ord_init()
 {
-	low = sprintf("%c", 7);                      # BEL is ascii 7
-	if (low == "\a") {                           # Regular ASCII
-		low  = 0;
-		high = 127;
-	} else if (sprintf("%c", 128 + 7) == "\a") { # ASCII, mark parity
-		low  = 128;
-		high = 255;
-	} else {                                     # EBCDIC(!)
-		low  = 0;
-		high = 255;
-	}
+        low = sprintf("%c", 7);                      # BEL is ascii 7
+        if (low == "\a") {                           # Regular ASCII
+                low  = 0;
+                high = 127;
+        } else if (sprintf("%c", 128 + 7) == "\a") { # ASCII, mark parity
+                low  = 128;
+                high = 255;
+        } else {                                     # EBCDIC(!)
+                low  = 0;
+                high = 255;
+        }
 
-	for (i = low; i <= high; i++) {
-		t = sprintf("%c", i);
-		_ord_[t] = i;
-	}
+        for (i = low; i <= high; i++) {
+                t = sprintf("%c", i);
+                _ord_[t] = i;
+        }
 
-	return 1;
+        return 1;
 }
 
 function _ord_fini()
 {
-	delete _ord_;
+        delete _ord_;
 }
 
 function ord(str, c)
 {
-	c = substr(str, 1, 1); # Only first character is of interest
-	return _ord_[c];
+        c = substr(str, 1, 1); # Only first character is of interest
+        return _ord_[c];
 }

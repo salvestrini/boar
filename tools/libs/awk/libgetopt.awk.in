@@ -18,11 +18,11 @@
 
 function _getopt_init()
 {
-	optind     = 1;
-	opterr     = 1; # Standard default value
-	_opti      = 0;
+        optind     = 1;
+        opterr     = 1; # Standard default value
+        _opti      = 0;
 
-	return 1;
+        return 1;
 }
 
 function _getopt_fini()
@@ -37,94 +37,94 @@ function _getopt_fini()
 #
 function getopt(optargc, optargv, options)
 {
-	i           = 0;
-	optopt      = "";
-	thisopt     = "";
-	printerrors = opterr; # Set as opterr
+        i           = 0;
+        optopt      = "";
+        thisopt     = "";
+        printerrors = opterr; # Set as opterr
 
-	if (length(options) == 0) {
-		return -1;
-	}
+        if (length(options) == 0) {
+                return -1;
+        }
 
-	if (substr(options, 1, 1) == ":") {
-		printerrors = 0; # Override
-	}
+        if (substr(options, 1, 1) == ":") {
+                printerrors = 0; # Override
+        }
 
-	if ((optind >= optargc) || (optargc == 1)) {
-		return -1;
-	}
+        if ((optind >= optargc) || (optargc == 1)) {
+                return -1;
+        }
 
-	if (optargv[optind] !~ /^-[^: [:space:]]/) {
-		_opti = 0;
-		return -1;
-	}
+        if (optargv[optind] !~ /^-[^: [:space:]]/) {
+                _opti = 0;
+                return -1;
+        }
 
-#	if (length(optargv[optind]) > 2) {
-#		optind++
-#		return "?";
-#	}
+#       if (length(optargv[optind]) > 2) {
+#               optind++
+#               return "?";
+#       }
 
-	if (optargv[optind] == "--") {
-		optind++;
-		_opti = 0;
-		return -1;
-	}
+        if (optargv[optind] == "--") {
+                optind++;
+                _opti = 0;
+                return -1;
+        }
 
-	if (_opti == 0) {
-		_opti = 2;
-	}
+        if (_opti == 0) {
+                _opti = 2;
+        }
 
-	thisopt = substr(optargv[optind], _opti, 1);
-	optopt  = thisopt;
-	i       = index(options, thisopt);
+        thisopt = substr(optargv[optind], _opti, 1);
+        optopt  = thisopt;
+        i       = index(options, thisopt);
 
-	if (i == 0) {
-		if (printerrors) {
-			error("Invalid option -- " optopt "\n");
-		}
+        if (i == 0) {
+                if (printerrors) {
+                        error("Invalid option -- " optopt "\n");
+                }
 
-		if (_opti >= length(optargv[optind])) {
-			optind++;
-			_opti = 0;
-		} else {
-			_opti++;
-		}
+                if (_opti >= length(optargv[optind])) {
+                        optind++;
+                        _opti = 0;
+                } else {
+                        _opti++;
+                }
 
-		return "?";
-	}
+                return "?";
+        }
 
-	if (i < length(options) && substr(options, i + 1, 1) == ":") {
+        if (i < length(options) && substr(options, i + 1, 1) == ":") {
 
-		if (length(optargv[optind]) - _opti > 0) {
-			optarg = substr(optargv[optind], _opti + 1);
-		} else {
-			if (optind + 1 == optargc) {
+                if (length(optargv[optind]) - _opti > 0) {
+                        optarg = substr(optargv[optind], _opti + 1);
+                } else {
+                        if (optind + 1 == optargc) {
 
-				if (substr(options, 1, 1) == ":") {
-					return ":";
-				}
+                                if (substr(options, 1, 1) == ":") {
+                                        return ":";
+                                }
 
-				if (printerrors) {
-					error("Option requires an argument " \
-					      "-- " optopt "\n");
-				}
+                                if (printerrors) {
+                                        error("Option requires an argument " \
+                                              "-- " optopt "\n");
+                                }
 
-				return "?";
-			}
+                                return "?";
+                        }
 
-			optarg = optargv[++optind];
-		}
-		_opti = 0;
-	} else {
-		optarg = "";
-	}
+                        optarg = optargv[++optind];
+                }
+                _opti = 0;
+        } else {
+                optarg = "";
+        }
 
-	if (_opti == 0 || _opti >= length(optargv[optind])) {
-		optind++;
-		_opti = 0;
-	} else {
-		_opti++;
-	}
+        if (_opti == 0 || _opti >= length(optargv[optind])) {
+                optind++;
+                _opti = 0;
+        } else {
+                _opti++;
+        }
 
-	return thisopt;
+        return thisopt;
 }

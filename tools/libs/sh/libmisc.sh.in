@@ -19,13 +19,13 @@
 libmisc_init ()
 {
     if test x"$PROGNAME" = x""; then
-	echo "Missing program name !!!" >&2
-	exit 1
+        echo "Missing program name !!!" >&2
+        exit 1
     fi
 
     if test x"$PROGVERSION" = x""; then
-	echo "Missing program version !!!" >&2
-	exit 1
+        echo "Missing program version !!!" >&2
+        exit 1
     fi
 }
 

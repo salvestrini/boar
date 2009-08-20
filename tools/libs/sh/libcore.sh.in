@@ -18,12 +18,12 @@
 
 lib_init ()
 {
-	libtrace_init
-	libmisc_init
+        libtrace_init
+        libmisc_init
 }
 
 lib_fini ()
 {
-	libmisc_init
-	libtrace_init
+        libmisc_init
+        libtrace_init
 }
