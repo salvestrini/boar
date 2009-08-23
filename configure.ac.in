@@ -42,10 +42,11 @@ AM_INIT_AUTOMAKE([1.10 foreign -Wall])
 AC_PROG_GREP
 AC_PROG_SED
 
-AX_PATH_MISSING([SITETOOL], [sitetool])
-AX_PATH_MISSING([WGET],     [wget])
-AX_PATH_MISSING([DNT],      [dnt])
-AX_PATH_MISSING([PERL],     [perl])
+AX_PATH_MISSING([SITETOOL],       [sitetool])
+AX_PATH_MISSING([WGET],           [wget])
+AX_PATH_MISSING([DNT],            [dnt])
+AX_PATH_MISSING([DEVTODO_TO_DNT], [devtodo-to-dnt])
+AX_PATH_MISSING([PERL],           [perl])
 
 #
 # Retrieve version parts

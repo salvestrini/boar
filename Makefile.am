@@ -70,6 +70,89 @@ endif
 
 MAINTAINERCLEANFILES =
 
+DNT_DB     = $(top_builddir)/.dnt.db
+DEVTODO_DB = $(top_srcdir)/.todo
+DNT_FLAGS  = --database=$(DNT_DB) --mono
+
+$(DNT_DB): $(DEVTODO_DB)
+	$(DEVTODO_TO_DNT)			\
+		--input=$(DEVTODO_DB)		\
+		--output=$(DNT_DB)		\
+		--force || {			\
+		rm -f $(DNT_DB) ;		\
+		exit 1 ;			\
+	}
+
+TODO: $(DNT_DB)
+	$(DNT) $(DNT_FLAGS)			\
+	       show				\
+	       --filter="not done"		\
+	       --line-format="* %t"		\
+	       --width=0			\
+	       --indent-fill=""			\
+	       --unindent-fill=""		\
+	       --level-fill=""			\
+	       --output=TODO || {		\
+		rm -f TODO ;			\
+		exit 1 ;			\
+	}
+MAINTAINERCLEANFILES += TODO
+
+NEWS: $(DNT_DB)
+	start="" ;								  \
+	end="`date +"%Y-%m-%d"`" ;						  \
+	script="$(GITTAG_TO_DATE)" ;						  \
+	rm -f NEWS ;								  \
+	(for i in `$$script | sort -r -k 2 | $(SED) -e 's,\ ,_,g'` ;		  \
+	 do									  \
+		start="`echo $$i | $(SED) -e 's,^.*_,,'`" ;			  \
+		tag="`echo $$i | $(SED) -e 's,_.*$$,,'`" ;			  \
+		$(DNT) $(DNT_FLAGS)						  \
+			show							  \
+			--filter="start>=\"$$start\" and end<=\"$$end\" and done" \
+			--line-format="  %t"					  \
+			--level-fill=""						  \
+			--indent-fill=""					  \
+			--unindent-fill=""					  \
+			--width=0						  \
+			--hide-collapsed					  \
+		> NEWS.tmp ;							  \
+		if test ! "x`${SED} -n '$$=' < NEWS.tmp`" = "x" ; then		  \
+			echo "$$end ($$tag):" >> NEWS ;				  \
+			cat NEWS.tmp >> NEWS ;					  \
+			echo "" >> NEWS ;					  \
+			echo "$$start -> $$end : Ok" ;				  \
+		else								  \
+			echo "$$start -> $$end : Empty" ;			  \
+		fi ;								  \
+		end="$$start" ;							  \
+	done && rm -f NEWS.tmp) || {						  \
+		rm -f NEWS.tmp ;						  \
+		rm -f NEWS ;							  \
+		exit 1 ;							  \
+	}
+MAINTAINERCLEANFILES += NEWS
+
+AUTHORS:
+	rm -f AUTHORS                       &&                                  \
+	touch AUTHORS                       &&                                  \
+	cat $(srcdir)/AUTHORS.in >> AUTHORS &&                                  \
+	$(GITLOG_TO_COMMITTERS) | $(SED) -e 's,\(.*\),  \1,' >> AUTHORS &&      \
+	echo "" >> AUTHORS                  || {                                \
+	        rm -f AUTHORS ;                                                 \
+	        exit 1 ;                                                        \
+	}
+MAINTAINERCLEANFILES += AUTHORS
+
+ChangeLog:
+	$(GITLOG_TO_CHANGELOG) > ChangeLog || {	\
+		rm -f ChangeLog ;		\
+		exit 1 ;			\
+	}
+MAINTAINERCLEANFILES += ChangeLog
+
+dist-hook: NEWS TODO ChangeLog
+
 dist-gpg: dist
 	gpg --yes -b --use-agent					   \
 		-o $(PACKAGE_TARNAME)-$(PACKAGE_VERSION).tar.gz.sig	   \
