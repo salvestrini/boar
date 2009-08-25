@@ -33,7 +33,7 @@ image.iso: Makefile all
 	mkdir image-fs && \
 	( cd image-fs && \
 	  $(abs_top_builddir)/tools/scripts/mkiso-grub1 \
-		-k $(abs_top_builddir)/kernel/src/kernel \
+		-k @KERNEL@ \
 		-o $(abs_top_builddir)/image.iso ) || { \
 		rm -r -f image-fs ; \
 		exit 1 ; \
@@ -49,7 +49,7 @@ if GRUB2_SUPPORT
 image.iso: Makefile all
 	rm -r -f image-fs && \
 	mkdir image-fs && \
-	cp $(abs_top_builddir)/kernel/src/kernel image-fs && \
+	cp @KERNEL@ image-fs && \
 	( cd image-fs &&	\
 	  $(abs_top_builddir)/tools/scripts/mkiso-grub2 \
 		-b kernel \
