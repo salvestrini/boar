@@ -65,10 +65,6 @@ AX_PROG_GRUB2([$PATH:/bin:/sbin],[grub2_support=yes],[grub2_support=no])
 AM_CONDITIONAL(GRUB2_SUPPORT,[test "$grub2_support" = "yes"])
 AX_WITH_PROG([MKISOFS],[mkisofs])
 
-AC_CONFIG_SUBDIRS([
-        kernel
-])
-
 #
 # Finally output the configuration
 #
