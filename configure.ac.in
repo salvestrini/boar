@@ -23,7 +23,7 @@
 AC_INIT([Boar],[@VERSION@],[salvestrini@gmail.com],[boar])
 
 # Check for a recent version of autoconf
-AC_PREREQ([2.61])
+AC_PREREQ([2.64])
 
 # Place/find all autotools related files in the following directories
 AC_CONFIG_AUX_DIR([tools/autotools])
