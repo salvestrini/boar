@@ -15,4 +15,3 @@ PERL_AUTOFRISK="`required perl-autofrisk`"         || \
 
 BOOTSTRAPS=""
 GNULIBMODULES=""
-AC_CONFIG_AUX_DIR="tools/autotools"
