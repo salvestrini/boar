@@ -65,6 +65,17 @@ image.iso: all Makefile
 endif
 
 ##
+## NOTE:
+##     Makefile.sub is automatically distributed by automake rules
+##
+EXTRA_DIST =						\
+	TODO NEWS  					\
+	BUGS README COPYING AUTHORS INSTALL THANKS	\
+	bootstrap .bootstrap				\
+	configure.ac.in					\
+	.todo .dnt.db
+
+##
 ## Maintainer related targets
 ##
 
