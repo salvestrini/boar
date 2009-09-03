@@ -72,12 +72,19 @@ EXTRA_DIST =						\
 	TODO NEWS  					\
 	BUGS README COPYING AUTHORS INSTALL THANKS	\
 	bootstrap .bootstrap				\
-	configure.ac.in					\
 	.todo .dnt.db
 
 ##
 ## Maintainer related targets
 ##
+
+BUILT_SOURCES = $(top_srcdir)/.version
+
+$(top_srcdir)/.version:
+	echo $(VERSION) > $@-t && mv $@-t $@
+
+dist-hook:
+	echo $(VERSION) > $(distdir)/.tarball-version
 
 MAINTAINERCLEANFILES =
 
