@@ -1,24 +1,27 @@
 *~
-
-Makefile
+.deps
+.dirstamp
+*.o
+*.a
 Makefile.in
+Makefile
 
-/site/in/.sitetool
-/site/in/site.stamp
-/site/in/todos.sxml
-/site/in/todos.dump
-/site/in/news.sxml
-/site/in/news.dump
-/site/out/*
+/ChangeLog
+/VERSION
+/NEWS
+/TODO
+/AUTHORS
 
-.dnt.db
-aclocal.m4
-autom4te.cache
-config.log
-config.status
+/.version
+/.tarball-version
+
+/TAGS
+/aclocal.m4
+/autom4te.cache
 
 /configure
-/configure.ac
+/config.log
+/config.status
 
 /tools/autotools/install-sh
 /tools/autotools/missing
@@ -44,3 +47,12 @@ config.status
 /tools/scripts/mkiso-grub2.sh
 
 /image.iso
+
+/site/in/.sitetool
+/site/in/site.stamp
+/site/in/todos.sxml
+/site/in/todos.dump
+/site/in/news.sxml
+/site/in/news.dump
+/site/out/*
+
