@@ -46,7 +46,6 @@ AM_INIT_AUTOMAKE([1.10 foreign -Wall])
 AC_PROG_GREP
 AC_PROG_SED
 
-AX_PATH_MISSING([SITETOOL],       [sitetool])
 AX_PATH_MISSING([WGET],           [wget])
 AX_PATH_MISSING([DNT],            [dnt])
 AX_PATH_MISSING([DEVTODO_TO_DNT], [devtodo-to-dnt])
@@ -85,9 +84,6 @@ AC_CONFIG_FILES([
 	tools/scripts/Makefile
 	tools/autotools/Makefile
 	tools/autotools/m4/Makefile
-
-	site/Makefile
-	site/in/Makefile
 ])
 
 AC_CONFIG_FILES([tools/maint/fetch],               [chmod +x tools/maint/fetch])

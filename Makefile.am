@@ -191,9 +191,6 @@ dist-upload: dist-gpg
 		exit 1 ;						\
 	}
 
-site: all
-	(cd site && $(MAKE) $(AM_MAKEFLAGS) site)
-
 HOST = "http://git.savannah.gnu.org/gitweb/?p=gnulib.git;a=blob_plain;hb=HEAD;f="
 
 update-download:
