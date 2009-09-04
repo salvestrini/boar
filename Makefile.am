@@ -191,23 +191,15 @@ dist-upload: dist-gpg
 		exit 1 ;						\
 	}
 
-HOST = "http://git.savannah.gnu.org/gitweb/?p=gnulib.git;a=blob_plain;hb=HEAD;f="
+announcement:
+	$(ANNOUNCE_GEN)                         \
+	  --release-type=alpha                  \
+	  --package=$(PACKAGE_TARNAME)          \
+	  --prev=$(PACKAGE_VERSION).test        \
+	  --curr=$(PACKAGE_VERSION)             \
+	  --gpg-key-id=TEST                     \
+	  --url-dir=TEST
 
-update-download:
-	rm -r -f fetch-dir && \
-	mkdir fetch-dir && \
-	$(FETCH) $(HOST)doc/INSTALL fetch-dir/INSTALL && \
-	chmod a+r fetch-dir/INSTALL && \
-	chmod u+w fetch-dir/INSTALL && \
-	$(FETCH) $(HOST)doc/COPYINGv2 fetch-dir/COPYING && \
-	chmod a+r fetch-dir/COPYING && \
-	chmod u+w fetch-dir/COPYING && \
-	mv -f fetch-dir/* ./ || { \
-		rm -r -f fetch-dir ; \
-		exit 1 ; \
-	} && \
-	rm -r -f fetch-dir
-
-update-local: Makefile update-download
+update-local: Makefile
 
 maintainer-check-local: Makefile
