@@ -139,8 +139,6 @@ EXTRA_DIST += $(TESTS)
 ##
 ## Maintainer related targets
 ##
-HOST = "http://git.savannah.gnu.org/gitweb/?p=gnulib.git;a=blob_plain;hb=HEAD;f="
-
 update-local: Makefile
 
 maintainer-check-local: Makefile
