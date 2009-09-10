@@ -34,6 +34,7 @@ EXTERNAL =					\
 	$(URL_AA)/ax_with_prog.m4
 
 INTERNAL =					\
+	gnulib-cache.m4				\
 	ax_prog_grub1.m4			\
 	ax_prog_grub2.m4
 
