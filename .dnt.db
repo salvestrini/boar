@@ -1,17 +1,37 @@
-<?xml version="1.0"?>
-<root><entry priority="veryhigh" start="1250170554">
-        Release 0.1.0
-        <entry priority="veryhigh" start="1252443527">
-            Rearrange the build-related code (macros, makefiles, bootstrap, gnulib-use)
-        </entry>
-    </entry>
-    <entry priority="high" start="1250170556">
-        Release 0.2.0
-    </entry>
-    <entry priority="medium" start="1250170558">
-        Release 0.3.0
-    </entry>
-    <entry priority="low" start="1250170560">
-        Release 0.4.0
-    </entry>
-    </root>
+<?xml version="1.0" ?>
+<root>
+	Default DB name
+	<entry priority="veryhigh" start="1250170554">
+		Release 0.1.0
+		<entry priority="veryhigh" start="1252443527">
+			Rearrange the build-related code (macros, makefiles, bootstrap, gnulib-use)
+		</entry>
+		<entry priority="high" start="1253621701">
+			Update build
+			<entry priority="high" start="1253621732">
+				Fix package version in order to handle git versioning
+			</entry>
+			<entry priority="medium" start="1253621760">
+				Use PACKAGE_URL in site building
+			</entry>
+			<entry priority="high" start="1253621782">
+				Create AX_PACKAGE_API macro
+				<entry priority="high" start="1253621807">
+					Update configure.ac replacing API-handling with AX_PACKAGE_API
+				</entry>
+			</entry>
+			<entry end="1253621943" priority="high" start="1253621887">
+				Move internal macros to build-utils package
+			</entry>
+		</entry>
+	</entry>
+	<entry priority="high" start="1250170556">
+		Release 0.2.0
+	</entry>
+	<entry priority="medium" start="1250170558">
+		Release 0.3.0
+	</entry>
+	<entry priority="low" start="1250170560">
+		Release 0.4.0
+	</entry>
+</root>
