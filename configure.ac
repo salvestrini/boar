@@ -38,7 +38,7 @@ AC_CONFIG_MACRO_DIR([tools/autotools/m4])
 # file, AUTOMAKE_OPTIONS variable
 #
 #AM_INIT_AUTOMAKE([1.10 foreign no-installman no-installinfo -Wall nostdinc])
-AM_INIT_AUTOMAKE([1.10 foreign -Wall])
+AM_INIT_AUTOMAKE([1.10 foreign -Wall color-tests])
 
 #
 # Checks for needed programs
