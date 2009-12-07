@@ -85,6 +85,20 @@ else
 image.iso: all Makefile
 endif
 
+test-image: Makefile image.iso
+	@QEMU@ -cdrom image.iso
+
+##
+## help related target
+##
+help:
+	@echo ""
+	@echo "  Targets:"
+	@echo ""
+	@echo "    image.iso  -- Build an ISO image"
+	@echo "    test-image -- Run qemu with image.iso"
+	@echo ""
+
 ##
 ## Maintainer related targets
 ##
