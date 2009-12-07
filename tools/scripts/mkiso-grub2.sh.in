@@ -19,13 +19,14 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-me="mkiso-grub2"
-version="0.1"
+PROGNAME="mkiso-grub2"
+PROGVERSION="0.1"
+
 output=""
 
 case $1 in
     -h|--help)
-    echo "Usage: $me [OPTIONS]"
+    echo "Usage: $PROGNAME [OPTIONS]"
     echo ""
     echo "Build an ISO image file using grub (2.x) as boot loader"
     echo ""
@@ -37,7 +38,7 @@ case $1 in
     ;;
 
     -v|--version)
-    echo "$me (@PACKAGE_NAME@) $version"
+    echo "$PROGNAME (@PACKAGE_NAME@) $PROGVERSION"
     echo "Written by Francesco Salvestrini"
     echo "           Alessandro Massignan"
     echo ""
@@ -51,12 +52,12 @@ case $1 in
 esac
 
 if test -z "$boot" ; then
-    echo "$me: Missing boot file"
+    echo "$PROGNAME: Missing boot file"
     exit 1
 fi
 
 if test -z "$output" ; then
-    echo "$me: Missing output file"
+    echo "$PROGNAME: Missing output file"
     exit 1
 fi
 

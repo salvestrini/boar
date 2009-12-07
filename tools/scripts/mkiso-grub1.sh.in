@@ -19,17 +19,17 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-me="mkiso-grub1"
-version="0.1"
-output=""
+PROGNAME="mkiso-grub1"
+PROGVERSION="0.1"
 
+output=""
 kernel=""
 modules=""
 
 while test $# -gt 0 ; do
     case $1 in
         -h|--help)
-            echo "Usage: $me [OPTIONS...]"
+            echo "Usage: $PROGNAME [OPTIONS...]"
             echo ""
             echo "Build an ISO image file using grub (1.x) as boot loader"
             echo ""
@@ -42,7 +42,7 @@ while test $# -gt 0 ; do
             ;;
 
         -v|--version)
-            echo "$me (@PACKAGE_NAME@) $version"
+            echo "$PROGNAME (@PACKAGE_NAME@) $PROGVERSION"
             echo "Written by Francesco Salvestrini"
             echo "           Alessandro Massignan"
             echo ""
@@ -74,12 +74,12 @@ while test $# -gt 0 ; do
 done
 
 if test -z "$kernel" ; then
-    echo "$me: Missing kernel file"
+    echo "$PROGNAME: Missing kernel file"
     exit 1
 fi
 
 if test -z "$output" ; then
-    echo "$me: Missing output file"
+    echo "$PROGNAME: Missing output file"
     exit 1
 fi
 
