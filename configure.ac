@@ -67,6 +67,7 @@ AX_PROG_GRUB2([$PATH:/bin:/sbin],[grub2_support=yes],[grub2_support=no])
 AM_CONDITIONAL(GRUB2_SUPPORT,[test "$grub2_support" = "yes"])
 AX_WITH_PROG([MKISOFS],[mkisofs])
 AX_WITH_PROG([KERNEL], [kernel])
+AX_WITH_PROG([QEMU],   [qemu])
 
 #
 # Finally output the configuration
