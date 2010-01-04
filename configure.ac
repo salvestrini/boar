@@ -46,9 +46,9 @@ AM_INIT_AUTOMAKE([1.10 foreign -Wall color-tests])
 AC_PROG_GREP
 AC_PROG_SED
 
-AX_PATH_MISSING([PERL],           [perl])
-AX_PATH_MISSING([WGET],           [wget])
-AX_PATH_MISSING([DNT],            [dnt])
+AX_PATH_MISSING([PERL], [perl])
+AX_PATH_MISSING([WGET], [wget])
+AX_PATH_MISSING([DNT],  [dnt])
 
 #
 # Retrieve version parts
