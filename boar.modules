@@ -1,0 +1,140 @@
+<?xml version="1.0"?><!--*- mode: nxml; indent-tabs-mode: nil -*-->
+<!DOCTYPE moduleset SYSTEM "moduleset.dtd">
+<?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
+<moduleset>
+  <repository name = "savannah"
+              type = "git"
+              href = "git://git.savannah.nongnu.org/"/>
+
+  <repository name = "github"
+              type = "git"
+              href = "git://github.com/salvestrini/"/>
+
+  <repository name="ftp.gnu.org"
+              type="tarball"
+              href="ftp://ftp.gnu.org/gnu/"/>
+
+  <autotools id="m4"
+             autogen-sh="configure">
+    <branch repo="ftp.gnu.org"
+            module="m4/m4-1.4.12.tar.bz2"
+            version="1.4.12"
+            size="900132"
+            md5sum="b3587c993523dd320c318ec456876839">
+    </branch>
+  </autotools>
+
+  <autotools id="autoconf"
+             autogen-sh="configure">
+    <branch repo="ftp.gnu.org"
+            module="autoconf/autoconf-2.65.tar.bz2"
+            version="2.65"
+            size="1332522"
+            md5sum="a6de1cc6434cd64038b0a0ae4e252b33">
+    </branch>
+    <dependencies>
+      <dep package="m4"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="automake"
+             autogen-sh="configure">
+    <branch repo="ftp.gnu.org"
+            module="automake/automake-1.11.1.tar.bz2"
+            version="1.10.3"
+            size="1066685"
+            md5sum="c2972c4d9b3e29c03d5f2af86249876f">
+    </branch>
+  </autotools>
+
+  <autotools id="libtool"
+             autogen-sh="configure">
+    <branch repo="ftp.gnu.org"
+            module="libtool/libtool-2.2.6b.tar.gz"
+            version="2.2.6b"
+            size="2347317"
+            md5sum="07da460450490148c6d2df0f21481a25"
+            checkoutdir="libtool-2.2.6">
+    </branch>
+  </autotools>
+
+  <autotools id="blink"
+             autogen-sh="configure"
+             autogen-template= "%(srcdir)s/bootstrap &amp;&amp; %(srcdir)s/%(autogen-sh)s --prefix %(prefix)s">
+    <branch repo="github"
+            module="blink"
+            checkoutdir="blink">
+    </branch>
+  </autotools>
+
+  <autotools id="choose"
+             autogen-sh="configure"
+             autogen-template= "%(srcdir)s/bootstrap &amp;&amp; %(srcdir)s/%(autogen-sh)s --prefix %(prefix)s">
+    <branch repo="github"
+            module="choose"
+            checkoutdir="choose">
+    </branch>
+  </autotools>
+
+  <autotools id="modfriskers"
+             autogen-sh="configure"
+             autogen-template= "%(srcdir)s/bootstrap &amp;&amp; %(srcdir)s/%(autogen-sh)s --prefix %(prefix)s">
+    <branch repo="github"
+            module="modfriskers"
+            checkoutdir="modfriskers">
+    </branch>
+  </autotools>
+
+  <autotools id="bfd-utils"
+             autogen-sh="configure"
+             autogen-template= "%(srcdir)s/bootstrap &amp;&amp; %(srcdir)s/%(autogen-sh)s --prefix %(prefix)s">
+    <branch repo="github"
+            module="bfd-utils"
+            checkoutdir="bfd-utils">
+    </branch>
+  </autotools>
+
+  <autotools id="gnulib"
+             autogen-sh="configure"
+             autogen-template= "%(srcdir)s/bootstrap &amp;&amp; %(srcdir)s/%(autogen-sh)s --prefix %(prefix)s">
+    <branch repo="savannah"
+            module="gnulib"
+            checkoutdir="gnulib">
+    </branch>
+  </autotools>
+
+  <autotools id="elklib"
+             autogen-sh="configure"
+             autogen-template= "%(srcdir)s/bootstrap &amp;&amp; %(srcdir)s/%(autogen-sh)s --prefix %(prefix)s">
+    <branch repo="savannah"
+            module="elklib"
+            checkoutdir="elklib">
+    </branch>
+  </autotools>
+
+  <autotools id="hybrid"
+             autogen-sh="configure"
+             autogen-template= "%(srcdir)s/bootstrap &amp;&amp; %(srcdir)s/%(autogen-sh)s --prefix %(prefix)s">
+    <branch repo="savannah"
+            module="hybrid"
+            checkoutdir="hybrid">
+    </branch>
+  </autotools>
+
+  <metamodule id="boar">
+    <dependencies>
+      <dep package="automake" />
+      <dep package="autoconf" />
+      <dep package="libtool" />
+      <!-- <dep package="gnulib" /> -->
+
+      <dep package="modfriskers"/>
+      <dep package="bfd-utils"/>
+      <dep package="elklib"/>
+      <dep package="blink"/>
+      <dep package="choose"/>
+      <dep package="hybrid"/>
+    </dependencies>
+  </metamodule>
+
+</moduleset>
