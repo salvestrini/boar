@@ -1,0 +1,16 @@
+# -*- mode: python -*-
+
+# What module set should be used
+moduleset = 'boar'
+
+# A list of the modules to build
+modules = [ 'boar' ]
+
+# What directory should the source be checked out to?
+checkoutroot = os.getcwd() + '/checkout'
+
+# The prefix to configure/install modules to (must have write access)
+prefix = os.getcwd() + '/build'
+
+# Global configuration variable
+autogenargs = ''

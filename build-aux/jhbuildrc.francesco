@@ -1,18 +1,20 @@
 # -*- mode: python -*-
 
-# edit this file to match your settings and copy it to ~/.jhbuildrc
-
+# Repositories
 repos['github']   = 'git@github.com:salvestrini/'
 repos['savannah'] = 'ssh://salvestrini@git.sv.gnu.org/srv/git'
 
-# what module set should be used
+# What module set should be used
 moduleset = 'boar'
 
 # A list of the modules to build
 modules = [ 'boar' ]
 
-# what directory should the source be checked out to?
+# What directory should the source be checked out to?
 checkoutroot = os.path.expanduser('/tmp/checkout')
 
-# the prefix to configure/install modules to (must have write access)
+# The prefix to configure/install modules to (must have write access)
 prefix = os.path.expanduser('/tmp/build')
+
+# Global configuration variable
+autogenargs = ''

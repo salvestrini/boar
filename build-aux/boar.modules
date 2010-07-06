@@ -14,6 +14,20 @@
               type="tarball"
               href="ftp://ftp.gnu.org/gnu/"/>
 
+  <repository name="alpha.gnu.org"
+              type="tarball"
+              href="ftp://alpha.gnu.org/gnu/"/>
+
+  <autotools id="grub"
+             autogen-sh="configure">
+    <branch repo="alpha.gnu.org"
+            module="grub/grub-0.97.tar.gz"
+            version="0.97"
+            size="971783"
+            md5sum="cd3f3eb54446be6003156158d51f4884">
+    </branch>
+  </autotools>
+
   <autotools id="m4"
              autogen-sh="configure">
     <branch repo="ftp.gnu.org"
@@ -123,10 +137,11 @@
 
   <metamodule id="boar">
     <dependencies>
-      <dep package="automake" />
       <dep package="autoconf" />
+      <dep package="automake" />
       <dep package="libtool" />
       <!-- <dep package="gnulib" /> -->
+      <dep package="grub" />
 
       <dep package="modfriskers"/>
       <dep package="bfd-utils"/>
